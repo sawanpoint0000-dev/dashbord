@@ -1,13 +1,26 @@
 <!doctype html>
 <html lang="en">
 <head>
+
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+
 <title>AMUL DASHBOARD</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Arial,sans-serif;background:#f8f9fb}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box
+}
+
+body{
+font-family:Arial,sans-serif;
+background:#f8f9fb
+}
 
 .header{
 position:fixed;
@@ -156,14 +169,26 @@ font-size:17px
 .plan-actions{
 display:flex;
 align-items:center;
-gap:8px
+gap:8px;
+flex-wrap:wrap
 }
 
 .btn-invest{
-background:#e61e2a;
+background:#16a34a;
 color:#fff;
 border:none;
-padding:8px 25px;
+padding:8px 18px;
+border-radius:8px;
+font-size:14px;
+font-weight:bold;
+cursor:pointer
+}
+
+.btn-sell{
+background:#dc2626;
+color:#fff;
+border:none;
+padding:8px 18px;
 border-radius:8px;
 font-size:14px;
 font-weight:bold;
@@ -199,39 +224,8 @@ font-weight:700
 font-size:13px;
 color:#16a34a;
 font-weight:700;
-margin-top:6px
-}
-
-.bottom-nav{
-position:fixed;
-bottom:0;
-width:100%;
-height:60px;
-background:#fff;
-display:grid;
-grid-template-columns:repeat(4,1fr);
-border-top:1px solid #f0f0f0
-}
-
-.nav-link{
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-text-decoration:none;
-color:#b2bec3;
-font-size:10px;
-font-weight:600
-}
-
-.nav-link.active{
-color:#e61e2a
-}
-
-.nav-link img{
-width:22px;
-height:22px;
-margin-bottom:3px
+margin-top:6px;
+line-height:1.6
 }
 
 .custom-popup{
@@ -270,8 +264,7 @@ display:flex;
 justify-content:center;
 align-items:center;
 font-size:22px;
-font-weight:bold;
-flex-shrink:0
+font-weight:bold
 }
 
 .popup-text{
@@ -281,14 +274,12 @@ flex:1
 .popup-title{
 font-size:15px;
 font-weight:700;
-color:#222;
-margin-bottom:3px
+color:#222
 }
 
 .popup-message{
 font-size:13px;
-color:#666;
-line-height:1.4
+color:#666
 }
 
 .popup-close{
@@ -435,189 +426,292 @@ color:#555
 background:#e61e2a;
 color:#fff
 }
+
+.bottom-nav{
+position:fixed;
+bottom:0;
+width:100%;
+height:60px;
+background:#fff;
+display:grid;
+grid-template-columns:repeat(4,1fr);
+border-top:1px solid #f0f0f0
+}
+
+.nav-link{
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+text-decoration:none;
+color:#b2bec3;
+font-size:10px;
+font-weight:600
+}
+
+.nav-link.active{
+color:#e61e2a
+}
+
+.nav-link img{
+width:22px;
+height:22px;
+margin-bottom:3px
+}
+
 </style>
+
 </head>
 
 <body>
 
 <div class="custom-popup" id="popup">
-    <div class="popup-icon" id="popupIcon">✓</div>
 
-    <div class="popup-text">
-        <div class="popup-title" id="popupTitle">Success</div>
-        <div class="popup-message" id="popupMessage">Action completed</div>
-    </div>
+<div class="popup-icon" id="popupIcon">✓</div>
 
-    <div class="popup-close" onclick="closePopup()">×</div>
+<div class="popup-text">
+
+<div class="popup-title" id="popupTitle">
+Success
 </div>
+
+<div class="popup-message" id="popupMessage">
+Done
+</div>
+
+</div>
+
+<div class="popup-close"
+onclick="closePopup()">×</div>
+
+</div>
+
+<!-- INVEST MODAL -->
 
 <div class="classy-modal" id="classyModal">
 
-    <div class="modal-content">
+<div class="modal-content">
 
-        <div class="modal-header-icon">
-            <img src="https://img.icons8.com/material-rounded/48/e61e2a/coins.png">
-        </div>
+<div class="modal-header-icon">
 
-        <h3 class="modal-title">Invest Now</h3>
-
-        <p class="modal-desc">
-            Confirm your investment plan details
-        </p>
-
-        <div class="modal-info-box">
-
-            <div class="info-row">
-                <span class="info-label">Plan Name</span>
-                <span class="info-value" id="cModalPlanName"></span>
-            </div>
-
-            <div class="info-row">
-                <span class="info-label">Amount</span>
-                <span class="info-value" id="cModalAmount"></span>
-            </div>
-
-            <div class="info-row">
-                <span class="info-label">Daily Income</span>
-                <span class="info-value" id="cModalDaily"></span>
-            </div>
-
-            <div class="info-row">
-                <span class="info-label">Cycle</span>
-                <span class="info-value">
-                    <span id="cModalCycle"></span> Days
-                </span>
-            </div>
-
-        </div>
-
-        <input type="password"
-        class="modal-password"
-        id="cModalPassword"
-        placeholder="Enter login password">
-
-        <div class="modal-footer">
-
-            <button class="btn-modal-cancel"
-            onclick="closeClassyModal()">
-            Back
-            </button>
-
-            <button class="btn-modal-confirm"
-            id="cModalConfirmBtn">
-            Confirm Now
-            </button>
-
-        </div>
-
-    </div>
+<img src="https://img.icons8.com/material-rounded/48/e61e2a/coins.png">
 
 </div>
 
+<h3 class="modal-title">
+Invest Now
+</h3>
+
+<p class="modal-desc">
+Confirm investment
+</p>
+
+<div class="modal-info-box">
+
+<div class="info-row">
+<span class="info-label">Plan</span>
+<span class="info-value"
+id="cModalPlanName"></span>
+</div>
+
+<div class="info-row">
+<span class="info-label">Amount</span>
+<span class="info-value"
+id="cModalAmount"></span>
+</div>
+
+<div class="info-row">
+<span class="info-label">Daily</span>
+<span class="info-value"
+id="cModalDaily"></span>
+</div>
+
+<div class="info-row">
+<span class="info-label">Days</span>
+<span class="info-value"
+id="cModalCycle"></span>
+</div>
+
+</div>
+
+<input
+type="password"
+class="modal-password"
+id="cModalPassword"
+placeholder="Enter login password">
+
+<div class="modal-footer">
+
+<button
+class="btn-modal-cancel"
+onclick="closeClassyModal()">
+Back
+</button>
+
+<button
+class="btn-modal-confirm"
+id="cModalConfirmBtn">
+Confirm
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- SELL MODAL -->
+
+<div class="classy-modal" id="sellModal">
+
+<div class="modal-content">
+
+<h3 class="modal-title">
+Sell Investment
+</h3>
+
+<p class="modal-desc">
+Enter password to sell
+</p>
+
+<input
+type="password"
+class="modal-password"
+id="sellPassword"
+placeholder="Enter login password">
+
+<div class="modal-footer">
+
+<button
+class="btn-modal-cancel"
+onclick="closeSellModal()">
+Cancel
+</button>
+
+<button
+class="btn-modal-confirm"
+onclick="confirmSell()">
+Sell Now
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- PRODUCT INFO -->
+
 <div class="classy-modal" id="infoModal">
 
-    <div class="modal-content">
+<div class="modal-content">
 
-        <div class="modal-header-icon">
-            <img src="https://img.icons8.com/material-rounded/48/e61e2a/info.png">
-        </div>
+<div class="modal-header-icon">
 
-        <h3 class="modal-title"
-        id="infoModalTitle">
-        Product Info
-        </h3>
+<img src="https://img.icons8.com/material-rounded/48/e61e2a/info.png">
 
-        <p class="modal-desc">
-            Plan information added by admin
-        </p>
+</div>
 
-        <div class="product-info-text"
-        id="infoModalText">
-        No information available
-        </div>
+<h3 class="modal-title"
+id="infoModalTitle">
+Product Info
+</h3>
 
-        <div class="modal-footer"
-        style="grid-template-columns:1fr">
+<div
+class="product-info-text"
+id="infoModalText">
+No Info
+</div>
 
-            <button class="btn-modal-confirm"
-            onclick="closeInfoModal()">
-            OK
-            </button>
+<div class="modal-footer"
+style="grid-template-columns:1fr">
 
-        </div>
+<button
+class="btn-modal-confirm"
+onclick="closeInfoModal()">
+OK
+</button>
 
-    </div>
+</div>
+
+</div>
 
 </div>
 
 <header class="header">
 
-    <div class="brand">Amul</div>
+<div class="brand">
+Amul
+</div>
 
-    <div class="header-actions">
+<div class="header-actions">
 
-        <div class="wallet-pill">
-            ₹<span id="walletBalance">0</span>
-        </div>
+<div class="wallet-pill">
+₹<span id="walletBalance">0</span>
+</div>
 
-        <button class="logout-btn"
-        onclick="logoutUser()">
-        Logout
-        </button>
+<button
+class="logout-btn"
+onclick="logoutUser()">
+Logout
+</button>
 
-    </div>
+</div>
 
 </header>
 
 <div class="hero-top">
 
-    <div class="banner-card">
-        <img src="https://amul.codershiningstar.store/public/ccc.jpg">
-    </div>
+<div class="banner-card">
+
+<img src="https://amul.codershiningstar.store/public/ccc.jpg">
 
 </div>
 
-<div class="plan-container"
+</div>
+
+<div
+class="plan-container"
 id="planContainer">
 </div>
 
 <nav class="bottom-nav">
 
-    <a href="dashbord.html"
-    class="nav-link active">
+<a href="dashbord.html"
+class="nav-link active">
 
-        <img src="https://img.icons8.com/material-rounded/48/e61e2a/home.png">
+<img src="https://img.icons8.com/material-rounded/48/e61e2a/home.png">
 
-        <span>Home</span>
+<span>Home</span>
 
-    </a>
+</a>
 
-    <a href="fund.html"
-    class="nav-link">
+<a href="fund.html"
+class="nav-link">
 
-        <img src="https://img.icons8.com/material-rounded/48/b2bec3/bank-safe.png">
+<img src="https://img.icons8.com/material-rounded/48/b2bec3/bank-safe.png">
 
-        <span>Fund</span>
+<span>Fund</span>
 
-    </a>
+</a>
 
-    <a href="#"
-    class="nav-link">
+<a href="#"
+class="nav-link">
 
-        <img src="https://img.icons8.com/material-rounded/48/b2bec3/conference-call.png">
+<img src="https://img.icons8.com/material-rounded/48/b2bec3/conference-call.png">
 
-        <span>Team</span>
+<span>Team</span>
 
-    </a>
+</a>
 
-    <a href="upmine.html"
-    class="nav-link">
+<a href="upmine.html"
+class="nav-link">
 
-        <img src="https://img.icons8.com/material-rounded/48/b2bec3/user-male-circle.png">
+<img src="https://img.icons8.com/material-rounded/48/b2bec3/user-male-circle.png">
 
-        <span>Mine</span>
+<span>Mine</span>
 
-    </a>
+</a>
 
 </nav>
 
@@ -626,577 +720,912 @@ id="planContainer">
 const PROXY_URL =
 "https://fjseur.sawanenter7209.workers.dev";
 
-let popupTimer;
-let currentPhone =
-localStorage.getItem("phone") || "";
+// ===== TEST MODE =====
+// true = 1 minute
+// false = 24 hour
 
+const TEST_MODE = false;
+
+const INCOME_INTERVAL =
+TEST_MODE
+? 60000
+: 86400000;
+
+let popupTimer;
 let selectedPlan = null;
+let sellPurchase = null;
 let allPlans = [];
 let userPurchases = {};
 
+const currentPhone =
+localStorage.getItem("phone") || "";
+
 if(!currentPhone){
-    location.href = "login.html";
+
+location.href = "login.html";
+
 }
 
-function logoutUser(){
+// ================= API =================
 
-    localStorage.clear();
+async function proxyRequest(endpoint,method="GET",body=null){
 
-    location.href = "login.html";
+try{
+
+const options = {
+method,
+headers:{
+"Content-Type":"application/json"
+}
+};
+
+if(body){
+
+options.body =
+JSON.stringify(body);
+
 }
 
-function showPopup(type,title,message){
+const res =
+await fetch(
+PROXY_URL + endpoint,
+options
+);
 
-    clearTimeout(popupTimer);
+const text =
+await res.text();
 
-    const popup =
-    document.getElementById("popup");
+return text
+? JSON.parse(text)
+: null;
 
-    const icon =
-    document.getElementById("popupIcon");
+}catch(e){
 
-    document.getElementById("popupTitle").innerText =
-    title;
+console.log(e);
+return null;
 
-    document.getElementById("popupMessage").innerText =
-    message;
-
-    if(type === "success"){
-
-        icon.innerHTML = "✓";
-
-        icon.style.background = "#16a34a";
-
-    }else{
-
-        icon.innerHTML = "!";
-
-        icon.style.background = "#dc2626";
-    }
-
-    popup.classList.add("show");
-
-    popupTimer = setTimeout(()=>{
-
-        popup.classList.remove("show");
-
-    },2800);
 }
 
-function closePopup(){
-
-    document.getElementById("popup")
-    .classList.remove("show");
-}
-
-async function proxyRequest(endpoint, method="GET", body=null){
-
-    try{
-
-        const options = {
-            method,
-            headers:{
-                "Content-Type":"application/json"
-            }
-        };
-
-        if(body){
-            options.body = JSON.stringify(body);
-        }
-
-        const res =
-        await fetch(PROXY_URL + endpoint, options);
-
-        if(!res.ok){
-            throw new Error("Server Error");
-        }
-
-        const text = await res.text();
-
-        return text ? JSON.parse(text) : null;
-
-    }catch(e){
-
-        console.error(e);
-
-        return null;
-    }
 }
 
 async function getData(path){
 
-    return await proxyRequest("/db/" + path);
+return await proxyRequest(
+"/db/" + path
+);
+
 }
 
 async function setData(path,data){
 
-    return await proxyRequest("/db/" + path,"PUT",data);
+return await proxyRequest(
+"/db/" + path,
+"PUT",
+data
+);
+
 }
 
 async function pushData(path,data){
 
-    return await proxyRequest("/db/" + path,"POST",data);
+return await proxyRequest(
+"/db/" + path,
+"POST",
+data
+);
+
 }
 
-function listenData(path, callback){
+function listenData(path,callback){
 
-    setInterval(async ()=>{
+setInterval(async()=>{
 
-        try{
+const data =
+await getData(path);
 
-            const data = await getData(path);
+callback({
+val:()=>data
+});
 
-            callback({
-                val:()=> data
-            });
+},2000);
 
-        }catch(e){}
+}
 
-    },2000);
+// ================= POPUP =================
+
+function showPopup(type,title,message){
+
+clearTimeout(popupTimer);
+
+const popup =
+document.getElementById("popup");
+
+const icon =
+document.getElementById("popupIcon");
+
+document.getElementById("popupTitle")
+.innerText = title;
+
+document.getElementById("popupMessage")
+.innerText = message;
+
+if(type === "success"){
+
+icon.innerHTML = "✓";
+icon.style.background = "#16a34a";
+
+}else{
+
+icon.innerHTML = "!";
+icon.style.background = "#dc2626";
+
+}
+
+popup.classList.add("show");
+
+popupTimer = setTimeout(()=>{
+
+popup.classList.remove("show");
+
+},2500);
+
+}
+
+function closePopup(){
+
+document.getElementById("popup")
+.classList.remove("show");
+
+}
+
+// ================= USER =================
+
+function logoutUser(){
+
+localStorage.clear();
+
+location.href = "login.html";
+
 }
 
 async function findUserByPhone(phone){
 
-    try{
+const users =
+await getData("users");
 
-        const users = await getData("users");
+if(!users) return null;
 
-        if(!users) return null;
+for(let key in users){
 
-        for(let key in users){
+if(users[key].phone === phone){
 
-            if(users[key].phone === phone){
+return {
+key,
+data:users[key]
+};
 
-                return {
-                    key,
-                    data:users[key]
-                };
-            }
-        }
-
-    }catch(e){}
-
-    return null;
 }
+
+}
+
+return null;
+
+}
+
+// ================= WALLET =================
 
 function listenWalletBalance(){
 
-    if(!currentPhone) return;
+listenData(
+"demoWallet/" + currentPhone,
 
-    listenData("demoWallet/" + currentPhone,
-    (snap)=>{
+(snap)=>{
 
-        document.getElementById("walletBalance").innerText =
-        Number(snap.val() || 0).toFixed(2);
+document.getElementById("walletBalance")
+.innerText =
+Number(snap.val() || 0).toFixed(2);
 
-    });
+});
+
 }
+
+// ================= DAILY INCOME =================
+
+async function processDailyIncome(){
+
+const purchases =
+await getData("purchases");
+
+if(!purchases) return;
+
+for(let key in purchases){
+
+let p = purchases[key];
+
+if(p.sold === true) continue;
+
+const startTime =
+Number(p.startTime || Date.now());
+
+const days =
+Number(p.days || 0);
+
+const dailyIncome =
+Number(p.dailyIncome || 0);
+
+const amount =
+Number(p.amount || 0);
+
+const completedDays =
+Math.floor(
+(Date.now() - startTime)
+/
+INCOME_INTERVAL
+);
+
+let creditedDays =
+Number(p.creditedDays || 0);
+
+if(completedDays > creditedDays){
+
+let addDays =
+completedDays - creditedDays;
+
+if(addDays + creditedDays > days){
+
+addDays =
+days - creditedDays;
+
+}
+
+creditedDays += addDays;
+
+p.creditedDays =
+creditedDays;
+
+p.totalIncome =
+creditedDays * dailyIncome;
+
+await setData(
+"purchases/" + key,
+p
+);
+
+}
+
+if(creditedDays >= days){
+
+const walletPath =
+"demoWallet/" + p.phone;
+
+let balance =
+Number(await getData(walletPath) || 0);
+
+const finalAmount =
+amount + Number(p.totalIncome || 0);
+
+await setData(
+walletPath,
+balance + finalAmount
+);
+
+p.sold = true;
+
+p.completedAt =
+Date.now();
+
+await setData(
+"purchases/" + key,
+p
+);
+
+}
+
+}
+
+}
+
+// ================= PURCHASES =================
 
 function listenPurchases(){
 
-    if(!currentPhone) return;
+listenData("purchases",(snap)=>{
 
-    listenData("purchases", (snap)=>{
+userPurchases = {};
 
-        userPurchases = {};
+const data =
+snap.val() || {};
 
-        const data = snap.val() || {};
+Object.keys(data).forEach((k)=>{
 
-        Object.keys(data).forEach(k=>{
+const p = data[k];
 
-            const p = data[k];
+if(
+p.phone === currentPhone &&
+p.sold !== true
+){
 
-            if(p.phone === currentPhone &&
-            p.sold !== true){
+if(!userPurchases[p.planKey]){
 
-                const pk =
-                p.planKey || p.planName;
+userPurchases[p.planKey] = [];
 
-                if(!userPurchases[pk]){
-                    userPurchases[pk] = [];
-                }
-
-                userPurchases[pk].push({
-                    key:k,
-                    ...p
-                });
-            }
-        });
-
-        renderPlans();
-
-    });
 }
+
+userPurchases[p.planKey]
+.push({
+key:k,
+...p
+});
+
+}
+
+});
+
+renderPlans();
+
+});
+
+}
+
+// ================= LOAD PLANS =================
 
 function loadPlans(){
 
-    listenData("plans", (snap)=>{
+listenData("plans",(snap)=>{
 
-        allPlans = [];
+allPlans = [];
 
-        const data = snap.val() || {};
+const data =
+snap.val() || {};
 
-        Object.keys(data).forEach(k=>{
+Object.keys(data).forEach((k)=>{
 
-            allPlans.push({
-                key:k,
-                ...data[k]
-            });
+allPlans.push({
+key:k,
+...data[k]
+});
 
-        });
+});
 
-        renderPlans();
+renderPlans();
 
-    });
+});
+
 }
 
-function getCycleStatus(plan,purchase){
-
-    const totalDays =
-    Number(plan.days || 0);
-
-    const dailyIncome =
-    Number(plan.dailyIncome || 0);
-
-    const startTime =
-    Number(purchase.startTime || Date.now());
-
-    const passedDays =
-    Math.floor((Date.now() - startTime) / 86400000) + 1;
-
-    const runningDay =
-    Math.min(totalDays,
-    Math.max(1, passedDays));
-
-    return {
-        runningDay,
-        totalDays,
-        earnedIncome:
-        runningDay * dailyIncome
-    };
-}
-
-function renderPlans(){
-
-    const container =
-    document.getElementById("planContainer");
-
-    container.innerHTML = "";
-
-    if(allPlans.length === 0){
-
-        container.innerHTML =
-        "<p style='text-align:center;color:#777;padding:20px'>No plans available</p>";
-
-        return;
-    }
-
-    allPlans.forEach((plan)=>{
-
-        const purchases =
-        userPurchases[plan.key] || [];
-
-        const count =
-        purchases.length;
-
-        let totalDaily = 0;
-        let totalEarned = 0;
-
-        purchases.forEach(p=>{
-
-            const cycle =
-            getCycleStatus(plan,p);
-
-            totalDaily +=
-            Number(plan.dailyIncome);
-
-            totalEarned +=
-            cycle.earnedIncome;
-
-        });
-
-        const totalReturn =
-        Number(plan.dailyIncome) *
-        Number(plan.days) *
-        count;
-
-        container.innerHTML += `
-
-        <div class="plan-card">
-
-            ${count > 0
-            ? `<div class="invest-count">×${count} Invested</div>`
-            : ""}
-
-            <div class="days-badge">
-                Days : ${plan.days}
-            </div>
-
-            <div class="plan-layout">
-
-                <img src="${plan.image}"
-                class="plan-img">
-
-                <div class="plan-details">
-
-                    <h4 class="plan-name">
-                    ${plan.name}
-                    </h4>
-
-                    <div class="stats-row">
-
-                        <div class="stat-group">
-
-                            <span>Daily Income</span>
-
-                            <b>
-                            ₹${Number(plan.dailyIncome).toFixed(2)}
-                            </b>
-
-                        </div>
-
-                        <div class="stat-group">
-
-                            <span>Total Return</span>
-
-                            <b>
-                            ₹${totalReturn.toFixed(2)}
-                            </b>
-
-                        </div>
-
-                    </div>
-
-                    ${count > 0
-                    ? `<div class="total-income">
-                    Total Daily:
-                    ₹${totalDaily.toFixed(2)}
-                    |
-                    Earned:
-                    ₹${totalEarned.toFixed(2)}
-                    </div>`
-                    : ""}
-
-                    <div class="price-section">
-
-                        <span>
-                        Price :
-                        <b>
-                        ₹${Number(plan.price).toFixed(2)}
-                        </b>
-                        </span>
-
-                        <div class="plan-actions">
-
-                            <button
-                            class="btn-invest"
-                            onclick="buyPlanByKey('${plan.key}')">
-
-                            ${count > 0
-                            ? 'Invest Again'
-                            : 'Invest Now'}
-
-                            </button>
-
-                            <button
-                            class="btn-info"
-                            onclick="openPlanInfo('${plan.key}')">
-
-                            i
-
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        `;
-    });
-}
+// ================= PRODUCT INFO =================
 
 window.openPlanInfo = function(planKey){
 
-    const plan =
-    allPlans.find(p=> p.key === planKey);
+const plan =
+allPlans.find(p=>p.key === planKey);
 
-    if(!plan) return;
+if(!plan) return;
 
-    document.getElementById("infoModalTitle").innerText =
-    plan.name;
+document.getElementById("infoModalTitle")
+.innerText = plan.name;
 
-    document.getElementById("infoModalText").innerText =
-    plan.info ||
-    plan.description ||
-    "No information available";
+document.getElementById("infoModalText")
+.innerText =
+plan.info ||
+plan.description ||
+"No information available";
 
-    document.getElementById("infoModal")
-    .classList.add("show");
+document.getElementById("infoModal")
+.classList.add("show");
+
 };
 
 window.closeInfoModal = function(){
 
-    document.getElementById("infoModal")
-    .classList.remove("show");
+document.getElementById("infoModal")
+.classList.remove("show");
+
 };
+
+// ================= RENDER =================
+
+function renderPlans(){
+
+const container =
+document.getElementById("planContainer");
+
+container.innerHTML = "";
+
+allPlans.forEach((plan)=>{
+
+const purchases =
+userPurchases[plan.key] || [];
+
+const count =
+purchases.length;
+
+let totalIncome = 0;
+
+purchases.forEach((p)=>{
+
+totalIncome +=
+Number(p.totalIncome || 0);
+
+});
+
+container.innerHTML += `
+
+<div class="plan-card">
+
+${count > 0
+? `
+<div class="invest-count">
+×${count} Invested
+</div>
+`
+: ""}
+
+<div class="days-badge">
+Days : ${plan.days}
+</div>
+
+<div class="plan-layout">
+
+<img
+src="${plan.image}"
+class="plan-img">
+
+<div class="plan-details">
+
+<h4 class="plan-name">
+${plan.name}
+</h4>
+
+<div class="stats-row">
+
+<div class="stat-group">
+
+<span>Daily Income</span>
+
+<b>
+₹${Number(plan.dailyIncome).toFixed(2)}
+</b>
+
+</div>
+
+<div class="stat-group">
+
+<span>Total Return</span>
+
+<b>
+₹${(
+Number(plan.dailyIncome)
+*
+Number(plan.days)
+).toFixed(2)}
+</b>
+
+</div>
+
+</div>
+
+${count > 0
+? `
+<div class="total-income">
+
+Active : ${count}
+<br>
+
+Total Income :
+₹${totalIncome.toFixed(2)}
+
+<br><br>
+
+${purchases.map((purchase,index)=>{
+
+const canSell =
+(
+Date.now()
+-
+Number(purchase.startTime || 0)
+)
+>= INCOME_INTERVAL;
+
+return `
+
+<div style="
+margin-bottom:6px;
+color:${canSell ? '#16a34a' : '#dc2626'}
+">
+
+Invest ${index + 1}
+|
+Income :
+₹${Number(
+purchase.totalIncome || 0
+).toFixed(2)}
+
+|
+${canSell
+? "Sell Ready"
+: "Sell Locked"
+}
+
+</div>
+
+`;
+
+}).join("")}
+
+</div>
+`
+: ""}
+
+<div class="price-section">
+
+<span>
+
+Price :
+
+<b>
+₹${Number(plan.price).toFixed(2)}
+</b>
+
+</span>
+
+<div class="plan-actions">
+
+<button
+class="btn-invest"
+onclick="buyPlanByKey('${plan.key}')">
+
+Invest
+
+</button>
+
+${purchases.map((purchase,index)=>{
+
+const canSell =
+(
+Date.now()
+-
+Number(purchase.startTime || 0)
+)
+>= INCOME_INTERVAL;
+
+return `
+
+<button
+class="btn-sell"
+${!canSell
+? "disabled style='opacity:.5'"
+: ""
+}
+onclick="
+${canSell
+? `openSellModal('${purchase.key}')`
+: `showPopup(
+'error',
+'Wait',
+'24 hour complete hone ke baad hi sell kar sakte ho'
+)`
+}
+">
+
+Sell ${index + 1}
+
+</button>
+
+`;
+
+}).join("")}
+
+<button
+class="btn-info"
+onclick="openPlanInfo('${plan.key}')">
+
+i
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+// ================= BUY =================
 
 window.buyPlanByKey = function(planKey){
 
-    const plan =
-    allPlans.find(p=> p.key === planKey);
+const plan =
+allPlans.find(p=>p.key === planKey);
 
-    if(!plan) return;
+if(!plan) return;
 
-    selectedPlan = plan;
+selectedPlan = plan;
 
-    document.getElementById("cModalPlanName").innerText =
-    plan.name;
+document.getElementById("cModalPlanName")
+.innerText = plan.name;
 
-    document.getElementById("cModalAmount").innerText =
-    "₹" + Number(plan.price).toFixed(2);
+document.getElementById("cModalAmount")
+.innerText =
+"₹" + Number(plan.price).toFixed(2);
 
-    document.getElementById("cModalDaily").innerText =
-    "₹" + Number(plan.dailyIncome).toFixed(2);
+document.getElementById("cModalDaily")
+.innerText =
+"₹" + Number(plan.dailyIncome).toFixed(2);
 
-    document.getElementById("cModalCycle").innerText =
-    plan.days;
+document.getElementById("cModalCycle")
+.innerText =
+plan.days;
 
-    document.getElementById("cModalPassword").value = "";
+document.getElementById("cModalPassword")
+.value = "";
 
-    document.getElementById("classyModal")
-    .classList.add("show");
+document.getElementById("classyModal")
+.classList.add("show");
+
 };
 
 window.closeClassyModal = function(){
 
-    document.getElementById("classyModal")
-    .classList.remove("show");
+document.getElementById("classyModal")
+.classList.remove("show");
+
 };
 
+// ================= CONFIRM BUY =================
+
 document.getElementById("cModalConfirmBtn")
-.addEventListener("click", async function(){
+.addEventListener("click",async function(){
 
-    if(!selectedPlan || !currentPhone){
+if(!selectedPlan) return;
 
-        return showPopup(
-        "error",
-        "Error",
-        "Something went wrong"
-        );
-    }
+const pass =
+document.getElementById("cModalPassword")
+.value.trim();
 
-    const pass =
-    document.getElementById("cModalPassword")
-    .value.trim();
+if(!pass){
 
-    if(!pass){
+return showPopup(
+"error",
+"Password",
+"Enter password"
+);
 
-        return showPopup(
-        "error",
-        "Password Required",
-        "Enter your password"
-        );
-    }
+}
 
-    const btn = this;
+const user =
+await findUserByPhone(currentPhone);
 
-    btn.disabled = true;
+if(
+!user ||
+user.data.password !== pass
+){
 
-    btn.innerText = "Processing...";
+return showPopup(
+"error",
+"Wrong Password",
+"Invalid password"
+);
 
-    try{
+}
 
-        const userData =
-        await findUserByPhone(currentPhone);
+const walletPath =
+"demoWallet/" + currentPhone;
 
-        if(!userData ||
-        userData.data.password !== pass){
+let balance =
+Number(await getData(walletPath) || 0);
 
-            showPopup(
-            "error",
-            "Wrong Password",
-            "Password does not match"
-            );
+if(balance < Number(selectedPlan.price)){
 
-            return;
-        }
+return showPopup(
+"error",
+"Low Balance",
+"Insufficient balance"
+);
 
-        const walletPath =
-        "demoWallet/" + currentPhone;
+}
 
-        let balance =
-        Number(await getData(walletPath) || 0);
+balance -= Number(selectedPlan.price);
 
-        if(balance < selectedPlan.price){
+await setData(
+walletPath,
+balance
+);
 
-            showPopup(
-            "error",
-            "Low Balance",
-            "Not enough balance in wallet"
-            );
+await pushData("purchases",{
 
-            return;
-        }
+phone:currentPhone,
 
-        await setData(
-        walletPath,
-        balance - selectedPlan.price
-        );
+planKey:selectedPlan.key,
 
-        await pushData("purchases",{
+planName:selectedPlan.name,
 
-            phone:currentPhone,
+amount:Number(selectedPlan.price),
 
-            planKey:selectedPlan.key,
+dailyIncome:Number(selectedPlan.dailyIncome),
 
-            planName:selectedPlan.name,
+days:Number(selectedPlan.days),
 
-            amount:selectedPlan.price,
+startTime:Date.now(),
 
-            dailyIncome:selectedPlan.dailyIncome,
+creditedDays:0,
 
-            days:selectedPlan.days,
+totalIncome:0,
 
-            startTime:Date.now(),
+sold:false
 
-            sold:false
-
-        });
-
-        showPopup(
-        "success",
-        "Success",
-        `${selectedPlan.name} purchased successfully!`
-        );
-
-        closeClassyModal();
-
-    }catch(err){
-
-        console.error(err);
-
-        showPopup(
-        "error",
-        "Failed",
-        "Please try again"
-        );
-
-    }finally{
-
-        btn.disabled = false;
-
-        btn.innerText = "Confirm Now";
-    }
 });
 
+closeClassyModal();
+
+showPopup(
+"success",
+"Success",
+"Investment successful"
+);
+
+});
+
+// ================= SELL =================
+
+window.openSellModal = function(purchaseKey){
+
+sellPurchase = purchaseKey;
+
+document.getElementById("sellPassword")
+.value = "";
+
+document.getElementById("sellModal")
+.classList.add("show");
+
+};
+
+window.closeSellModal = function(){
+
+document.getElementById("sellModal")
+.classList.remove("show");
+
+};
+
+async function confirmSell(){
+
+if(!sellPurchase) return;
+
+const pass =
+document.getElementById("sellPassword")
+.value.trim();
+
+if(!pass){
+
+return showPopup(
+"error",
+"Password",
+"Enter password"
+);
+
+}
+
+const user =
+await findUserByPhone(currentPhone);
+
+if(
+!user ||
+user.data.password !== pass
+){
+
+return showPopup(
+"error",
+"Wrong Password",
+"Invalid password"
+);
+
+}
+
+const purchase =
+await getData(
+"purchases/" + sellPurchase
+);
+
+if(!purchase){
+
+return showPopup(
+"error",
+"Error",
+"Purchase not found"
+);
+
+}
+
+if(purchase.sold === true){
+
+return showPopup(
+"error",
+"Closed",
+"Already sold"
+);
+
+}
+
+const canSell =
+(
+Date.now()
+-
+Number(purchase.startTime || 0)
+)
+>= INCOME_INTERVAL;
+
+if(!canSell){
+
+return showPopup(
+"error",
+"Not Allowed",
+"24 hour complete hone ke baad hi sell kar sakte ho"
+);
+
+}
+
+const walletPath =
+"demoWallet/" + currentPhone;
+
+let balance =
+Number(await getData(walletPath) || 0);
+
+const finalAmount =
+Number(purchase.amount || 0)
++
+Number(purchase.totalIncome || 0);
+
+await setData(
+walletPath,
+balance + finalAmount
+);
+
+purchase.sold = true;
+
+purchase.manualSell = true;
+
+purchase.completedAt =
+Date.now();
+
+await setData(
+"purchases/" + sellPurchase,
+purchase
+);
+
+closeSellModal();
+
+showPopup(
+"success",
+"Sold Successfully",
+"Amount wallet me add ho gaya"
+);
+
+}
+
+// ================= START =================
+
 listenWalletBalance();
+
 listenPurchases();
+
 loadPlans();
+
+processDailyIncome();
+
+setInterval(()=>{
+
+processDailyIncome();
+
+},10000);
 
 </script>
 
