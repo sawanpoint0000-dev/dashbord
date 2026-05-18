@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<title>AMUL Fund</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body {
+    font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+    background:linear-gradient(180deg,#e61e2a 0%,#f13a46 45%,#f8f9fb 100%);
+    min-height:100vh;
+    padding-bottom:90px;
+}
+
+.header-custom { height:65px; display:flex; align-items:center; justify-content:center; position:fixed; top:0; width:100%; z-index:1000; background:transparent; }
+.header-custom h2 { color:#fff; font-size:22px; font-weight:900; }
+
+.tab-section { padding:80px 20px 15px; display:flex; justify-content:center; }
+.tab-btn-wrapper { background:rgba(255,255,255,.2); padding:5px; border-radius:30px; width:100%; max-width:350px; }
+.tab-btn { background:#ba1620; color:#fff; text-align:center; padding:12px; border-radius:25px; font-weight:800; font-size:15px; }
+
+.plan-container { padding:10px 18px 100px; }
+.plan-card {
+    background:#fff; border-radius:24px; padding:20px; margin-bottom:22px; position:relative;
+    box-shadow:0 8px 24px rgba(0,0,0,.06);
+}
+.days-badge { position:absolute; top:0; right:0; background:#e61e2a; color:#fff; padding:7px 18px; border-radius:0 24px 0 18px; font-size:13px; font-weight:700; }
+.invest-count { position:absolute; top:12px; left:12px; background:#16a34a; color:#fff; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:700; }
+
+.card-main { display:flex; margin-top:15px; }
+.plan-img { width:100px; height:100px; object-fit:contain; }
+.plan-info { flex:1; margin-left:15px; }
+.plan-title { font-size:18px; font-weight:900; margin-bottom:12px; color:#222; }
+
+.stats-grid { display:flex; justify-content:space-between; margin:10px 0; }
+.stat-item b { display:block; font-size:20px; color:#e61e2a; }
+.stat-item span { font-size:12px; color:#777; }
+
+.cycle-timer {
+    background:#fef3c7; padding:8px 12px; border-radius:10px; margin:8px 0;
+    font-size:13.5px; font-weight:700; color:#b45309; text-align:center;
+}
+
+.total-earned { background:#f0fdf4; padding:10px; border-radius:12px; margin-top:8px; font-size:13.5px; color:#166534; font-weight:700; }
+
+.card-footer {
+    display:flex; justify-content:space-between; align-items:center; gap:8px;
+    border-top:1px solid #f2f2f2; padding-top:15px; margin-top:12px;
+}
+.price-tag { font-size:18px; font-weight:900; }
+.price-tag span { color:#e61e2a; }
+.btn-invest, .btn-sell {
+    padding:11px 18px; border:none; border-radius:14px; font-weight:900; cursor:pointer;
+}
+.btn-invest { background:linear-gradient(90deg,#e61e2a,#ff4b5c); color:#fff; }
+.btn-sell { background:#16a34a; color:#fff; }
+
+.modal {
+    display:none; position:fixed; z-index:5000; left:0; top:0; width:100%; height:100%;
+    background:rgba(0,0,0,.55); backdrop-filter:blur(3px);
+}
+.modal-content {
+    background:#fff; margin:10% auto; padding:25px; border-radius:28px; width:88%; max-width:360px; max-height:85vh; overflow-y:auto;
+}
+.modal-title { text-align:center; font-size:24px; font-weight:900; margin-bottom:15px; }
+.info-row { display:flex; justify-content:space-between; margin:10px 0; font-size:15px; }
+.info-row span:last-child { font-weight:800; color:#e61e2a; }
+
+.sell-item {
+    background:#f8fafc; padding:12px; border-radius:12px; margin:10px 0;
+    border:1px solid #e2e8f0;
+}
+.sell-item label { display:flex; align-items:center; gap:10px; font-weight:600; }
+
+.input-group { margin:15px 0; }
+.input-group input {
+    width:100%; padding:14px; border:1px solid #ddd; border-radius:12px; font-size:16px;
+}
+.modal-footer { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px; }
+.btn-modal-cancel { background:#ececec; border:none; padding:14px; border-radius:14px; font-weight:800; cursor:pointer; }
+.btn-modal-confirm { background:linear-gradient(90deg,#e61e2a,#ff4b5c); color:#fff; border:none; padding:14px; border-radius:14px; font-weight:800; cursor:pointer; }
+
+.bottom-nav {
+    position:fixed; bottom:0; width:100%; height:65px; background:#fff;
+    display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid #f1f1f1;
+    z-index:9999; box-shadow:0 -3px 10px rgba(0,0,0,.06);
+}
+.nav-link {
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-decoration:none; color:#b2bec3; font-size:10px; font-weight:800;
+}
+.nav-link.active { color:#e61e2a; }
+.nav-link img { width:23px; height:23px; margin-bottom:3px; }
+
+/* === SAME POPUP as Dashboard === */
+.custom-popup{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-30px);background:#fff;width:90%;max-width:340px;border-radius:18px;padding:16px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 15px 40px rgba(0,0,0,.15);z-index:99999;opacity:0;visibility:hidden;transition:.35s}
+.custom-popup.show{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+.popup-icon{width:45px;height:45px;border-radius:50%;background:#16a34a;color:#fff;display:flex;justify-content:center;align-items:center;font-size:22px;font-weight:bold;flex-shrink:0}
+.popup-text{flex:1}
+.popup-title{font-size:15px;font-weight:700;color:#222;margin-bottom:3px}
+.popup-message{font-size:13px;color:#666;line-height:1.4}
+.popup-close{cursor:pointer;font-size:18px;color:#aaa;font-weight:bold}
+</style>
+</head>
+
+<body>
+
+<header class="header-custom"><h2>Products</h2></header>
+
+<div class="tab-section">
+    <div class="tab-btn-wrapper"><div class="tab-btn">Daily Plan</div></div>
+</div>
+
+<div class="plan-container" id="fundContainer"></div>
+
+<!-- INVEST MODAL -->
+<div id="investModal" class="modal">
+    <div class="modal-content">
+        <h3 class="modal-title">Invest Now</h3>
+        <div class="info-row"><span>Plan</span><span id="mPlan"></span></div>
+        <div class="info-row"><span>Amount</span><span id="mPrice"></span></div>
+        <div class="info-row"><span>Daily</span><span id="mDaily"></span></div>
+        <div class="info-row"><span>Days</span><span id="mDays"></span></div>
+
+        <div class="input-group">
+            <input type="password" id="investPassword" placeholder="Enter Login Password">
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-modal-cancel" onclick="closeInvestModal()">BACK</button>
+            <button class="btn-modal-confirm" id="investConfirmBtn">CONFIRM INVEST</button>
+        </div>
+    </div>
+</div>
+
+<!-- SELL MODAL -->
+<div id="sellModal" class="modal">
+    <div class="modal-content">
+        <h3 class="modal-title">Sell Investment</h3>
+        <div id="sellPlanInfo"></div>
+        <div id="sellItemsList"></div>
+
+        <div class="info-row" style="margin-top:15px;border-top:1px solid #ddd;padding-top:10px;">
+            <span><strong>Total Selected</strong></span>
+            <span id="totalSelected" style="font-weight:900;color:#16a34a;">₹0</span>
+        </div>
+
+        <div class="input-group">
+            <input type="tel" id="sellPhone" placeholder="Your Phone Number" maxlength="10">
+        </div>
+        <div class="input-group">
+            <input type="password" id="sellPassword" placeholder="Enter Password">
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-modal-cancel" onclick="closeSellModal()">CANCEL</button>
+            <button class="btn-modal-confirm" id="sellConfirmBtn">CONFIRM SELL</button>
+        </div>
+    </div>
+</div>
+
+<!-- SAME POPUP -->
+<div class="custom-popup" id="popup">
+    <div class="popup-icon" id="popupIcon">✓</div>
+    <div class="popup-text">
+        <div class="popup-title" id="popupTitle">Success</div>
+        <div class="popup-message" id="popupMessage">Action completed</div>
+    </div>
+    <div class="popup-close" onclick="closePopup()">×</div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+    <a href="dashbord.html" class="nav-link"><img src="https://img.icons8.com/material-rounded/48/b2bec3/home.png"><span>Home</span></a>
+    <a href="fund.html" class="nav-link active"><img src="https://img.icons8.com/material-rounded/48/e61e2a/bank-safe.png"><span>Fund</span></a>
+    <a href="#" class="nav-link"><img src="https://img.icons8.com/material-rounded/48/b2bec3/conference-call.png"><span>Team</span></a>
+    <a href="upmine.html" class="nav-link"><img src="https://img.icons8.com/material-rounded/48/b2bec3/user-male-circle.png"><span>Mine</span></a>
+</nav>
+
+<script>
+// ==================== CONFIG ====================
+const PROXY_URL = "https://fjseur.sawanenter7209.workers.dev";
+let currentPhone = localStorage.getItem("phone") || "demo-user";
+let allPlans = [];
+let userPurchases = [];
+let popupTimer;
+
+// ==================== POPUP FUNCTIONS (Same as Dashboard) ====================
+function showPopup(type, title, message){
+    clearTimeout(popupTimer);
+    const popup = document.getElementById("popup");
+    const icon = document.getElementById("popupIcon");
+    
+    document.getElementById("popupTitle").innerText = title;
+    document.getElementById("popupMessage").innerText = message;
+
+    if(type === "success"){
+        icon.innerHTML = "✓"; 
+        icon.style.background = "#16a34a";
+    } else {
+        icon.innerHTML = "!"; 
+        icon.style.background = "#dc2626";
+    }
+    popup.classList.add("show");
+    popupTimer = setTimeout(() => popup.classList.remove("show"), 2800);
+}
+
+function closePopup(){
+    document.getElementById("popup").classList.remove("show");
+}
+
+// ==================== PROXY FUNCTIONS ====================
+async function proxyRequest(endpoint, method = "GET", body = null) {
+    try {
+        const options = { method, headers: { "Content-Type": "application/json" }};
+        if (body) options.body = JSON.stringify(body);
+        const res = await fetch(PROXY_URL + endpoint, options);
+        if (!res.ok) throw new Error();
+        const text = await res.text();
+        return text ? JSON.parse(text) : null;
+    } catch (e) { return null; }
+}
+
+async function getData(path) { return await proxyRequest("/db/" + path); }
+async function setData(path, data) { return await proxyRequest("/db/" + path, "PUT", data); }
+async function pushData(path, data) { return await proxyRequest("/db/" + path, "POST", data); }
+
+// ==================== LOAD DATA ====================
+function loadData() {
+    setInterval(async () => {
+        const plansData = await getData("plans");
+        const purchasesData = await getData("purchases");
+
+        if (plansData) allPlans = Object.keys(plansData).map(k => ({key:k, ...plansData[k]}));
+
+        userPurchases = [];
+        if (purchasesData) {
+            Object.keys(purchasesData).forEach(k => {
+                const p = purchasesData[k];
+                if (p.phone === currentPhone && p.sold !== true) {
+                    userPurchases.push({purchaseKey: k, ...p});
+                }
+            });
+        }
+        renderPlans();
+    }, 2500);
+}
+
+function getCycleInfo(plan, purchase) {
+    const totalDays = Number(plan.days);
+    const startTime = Number(purchase.startTime);
+    const elapsedMs = Date.now() - startTime;
+    const elapsedDays = Math.floor(elapsedMs / 86400000);
+    const runningDay = Math.min(totalDays, elapsedDays + 1);
+    const earned = runningDay * Number(plan.dailyIncome);
+    const hoursOld = elapsedMs / (1000 * 60 * 60);
+
+    return { runningDay, totalDays, earned, hoursOld, eligible: hoursOld >= 0
+     };
+}
+
+// ==================== RENDER ====================
+function renderPlans() {
+    const container = document.getElementById("fundContainer");
+    container.innerHTML = "";
+
+    allPlans.forEach(plan => {
+        const myPurchases = userPurchases.filter(p => p.planKey === plan.key);
+        const count = myPurchases.length;
+
+        let totalDaily = count * Number(plan.dailyIncome);
+        let totalEarned = 0;
+
+        myPurchases.forEach(pur => {
+            const info = getCycleInfo(plan, pur);
+            totalEarned += info.earned;
+        });
+
+        let cyclesHTML = '';
+        myPurchases.forEach((pur, i) => {
+            const info = getCycleInfo(plan, pur);
+            cyclesHTML += `<div class="cycle-timer">Inv ${i+1}: Day ${info.runningDay}/${info.totalDays} • Earned: ₹${info.earned.toFixed(2)}</div>`;
+        });
+
+        container.innerHTML += `
+        <div class="plan-card">
+            ${count > 0 ? `<div class="invest-count">×${count}</div>` : ''}
+            <div class="days-badge">Days : ${plan.days}</div>
+            <div class="card-main">
+                <img src="${plan.image}" class="plan-img">
+                <div class="plan-info">
+                    <div class="plan-title">${plan.name}</div>
+                    <div class="stats-grid">
+                        <div class="stat-item"><b>₹${Number(plan.dailyIncome).toFixed(2)}</b><span>Daily</span></div>
+                        <div class="stat-item"><b>₹${(Number(plan.dailyIncome)*Number(plan.days)*count).toFixed(2)}</b><span>Total</span></div>
+                    </div>
+                    ${count > 0 ? `<div class="total-earned">Total Daily: ₹${totalDaily.toFixed(2)}<br>Total Earned: ₹${totalEarned.toFixed(2)}</div>` : ''}
+                    ${cyclesHTML}
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="price-tag">Price : <span>₹${Number(plan.price).toFixed(2)}</span></div>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn-invest" onclick="openInvestModal('${plan.key}')">${count > 0 ? 'Invest Again' : 'Invest Now'}</button>
+                    ${count > 0 ? `<button class="btn-sell" onclick="openSellModal('${plan.key}')">Sell</button>` : ''}
+                </div>
+            </div>
+        </div>`;
+    });
+}
+
+// ==================== INVEST MODAL ====================
+let selectedPlanKey = null;
+
+window.openInvestModal = function(planKey) {
+    selectedPlanKey = planKey;
+    const plan = allPlans.find(p => p.key === planKey);
+    if (!plan) return;
+
+    document.getElementById("mPlan").innerText = plan.name;
+    document.getElementById("mPrice").innerText = "₹" + Number(plan.price).toFixed(2);
+    document.getElementById("mDaily").innerText = "₹" + Number(plan.dailyIncome).toFixed(2);
+    document.getElementById("mDays").innerText = plan.days;
+    document.getElementById("investPassword").value = "";
+    document.getElementById("investModal").style.display = "block";
+    document.getElementById("investConfirmBtn").onclick = confirmInvestment;
+};
+
+window.closeInvestModal = () => document.getElementById("investModal").style.display = "none";
+
+async function confirmInvestment() {
+    const pass = document.getElementById("investPassword").value.trim();
+    if (!pass) return showPopup("error", "Password Required", "Enter your password");
+
+    const btn = document.getElementById("investConfirmBtn");
+    btn.disabled = true;
+    btn.innerText = "Processing...";
+
+    try {
+        const users = await getData("users");
+        let valid = false;
+        for (let k in users) {
+            if (users[k].phone === currentPhone && users[k].password === pass) { valid = true; break; }
+        }
+        if (!valid) return showPopup("error", "Wrong Password", "Password does not match");
+
+        let balance = Number(await getData("demoWallet/" + currentPhone) || 0);
+        const plan = allPlans.find(p => p.key === selectedPlanKey);
+
+        if (balance < plan.price) return showPopup("error", "Low Balance", "Not enough balance");
+
+        await setData("demoWallet/" + currentPhone, balance - plan.price);
+
+        await pushData("purchases", {
+            phone: currentPhone,
+            planKey: plan.key,
+            planName: plan.name,
+            amount: plan.price,
+            dailyIncome: plan.dailyIncome,
+            days: plan.days,
+            startTime: Date.now(),
+            sold: false
+        });
+
+        showPopup("success", "Success", `${plan.name} purchased successfully!`);
+        closeInvestModal();
+    } catch(e) {
+        showPopup("error", "Failed", "Please try again");
+    } finally {
+        btn.disabled = false;
+        btn.innerText = "CONFIRM INVEST";
+    }
+}
+
+// ==================== SELL MODAL ====================
+let currentSellPlanKey = null;
+let selectedPurchases = [];
+
+window.openSellModal = function(planKey) {
+    currentSellPlanKey = planKey;
+    const plan = allPlans.find(p => p.key === planKey);
+    const myPurchases = userPurchases.filter(p => p.planKey === planKey);
+
+    let html = `<div class="info-row"><span>Plan</span><span>${plan.name}</span></div>`;
+    let itemsHTML = '';
+    selectedPurchases = [];
+
+    myPurchases.forEach((pur, index) => {
+        const info = getCycleInfo(plan, pur);
+        itemsHTML += `
+        <div class="sell-item">
+            <label>
+                <input type="checkbox" ${info.eligible ? '' : 'disabled'} 
+                       onchange="toggleSellItem('${pur.purchaseKey}', this.checked, ${info.earned})">
+                <span>Investment ${index+1}</span>
+            </label>
+            <div style="margin-left:28px;margin-top:5px;font-size:13px;">
+                Earned: <strong>₹${info.earned.toFixed(2)}</strong>
+            </div>
+        </div>`;
+    });
+
+    document.getElementById("sellPlanInfo").innerHTML = html;
+    document.getElementById("sellItemsList").innerHTML = itemsHTML || "<p>No active investment</p>";
+    document.getElementById("totalSelected").innerText = "₹0";
+    document.getElementById("sellPhone").value = currentPhone;
+    document.getElementById("sellPassword").value = "";
+    document.getElementById("sellModal").style.display = "block";
+    document.getElementById("sellConfirmBtn").onclick = confirmSell;
+};
+
+function toggleSellItem(key, checked, earned) {
+    if (checked) selectedPurchases.push({purchaseKey: key, earned: Number(earned)});
+    else selectedPurchases = selectedPurchases.filter(item => item.purchaseKey !== key);
+
+    const total = selectedPurchases.reduce((sum, item) => sum + item.earned, 0);
+    document.getElementById("totalSelected").innerText = "₹" + total.toFixed(2);
+}
+
+window.closeSellModal = () => {
+    document.getElementById("sellModal").style.display = "none";
+    selectedPurchases = [];
+};
+
+async function confirmSell() {
+    if (selectedPurchases.length === 0) {
+        return showPopup("error", "Select Investment", "Please select at least one investment");
+    }
+
+    const pass = document.getElementById("sellPassword").value.trim();
+    if (!pass) return showPopup("error", "Password Required", "Enter your password");
+
+    const btn = document.getElementById("sellConfirmBtn");
+    btn.disabled = true;
+    btn.innerText = "Processing...";
+
+    try {
+        const users = await getData("users");
+        let valid = false;
+        for (let k in users) {
+            if (users[k].phone === currentPhone && users[k].password === pass) { valid = true; break; }
+        }
+        if (!valid) return showPopup("error", "Wrong Password", "Password does not match");
+
+        let totalToAdd = 0;
+
+        for (let item of selectedPurchases) {
+            totalToAdd += item.earned;
+            await setData(`purchases/${item.purchaseKey}/sold`, true);
+        }
+
+        let balance = Number(await getData("demoWallet/" + currentPhone) || 0);
+        await setData("demoWallet/" + currentPhone, balance + totalToAdd);
+
+        showPopup("success", "Sell Successful", `₹${totalToAdd.toFixed(2)} added to wallet`);
+        closeSellModal();
+    } catch(e) {
+        showPopup("error", "Failed", "Please try again");
+    } finally {
+        btn.disabled = false;
+        btn.innerText = "CONFIRM SELL";
+    }
+}
+
+// ==================== INIT ====================
+loadData();
+</script>
+</body>
+</html>
