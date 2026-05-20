@@ -325,12 +325,16 @@ window.copyReferralLink = () => {
 };
 
 // ==================== USE REFERRAL CODE ====================
+// ==================== USE REFERRAL CODE (₹50 BAND KAR DIYA) ====================
 window.useReferralCode = async () => {
     const code = document.getElementById("enterRefCode").value.trim();
-    if (code.length !== 6) return showPopup("error", "Invalid Code", "Enter valid 6 digit code");
+    
+    if (code.length !== 6) 
+        return showPopup("error", "Invalid Code", "Enter valid 6 digit code");
 
     const users = await getData("users") || {};
     let referrerPhone = null;
+    
     for (let key in users) {
         if (users[key].refCode === code) {
             referrerPhone = users[key].phone;
@@ -338,19 +342,23 @@ window.useReferralCode = async () => {
         }
     }
 
-    if (!referrerPhone) return showPopup("error", "Invalid Code", "This referral code is not valid");
-    if (referrerPhone === currentPhone) return showPopup("error", "Not Allowed", "You cannot use your own referral code!");
+    if (!referrerPhone) 
+        return showPopup("error", "Invalid Code", "This referral code is not valid");
+
+    if (referrerPhone === currentPhone) 
+        return showPopup("error", "Not Allowed", "You cannot use your own referral code!");
 
     const used = await getData("usedJoiningCodes") || {};
-    if (used[currentPhone]) return showPopup("error", "Already Used", "You have already used a referral code!");
+    
+    if (used[currentPhone]) 
+        return showPopup("error", "Already Used", "You have already used a referral code!");
 
-    let bal = Number(await getData("demoWallet/" + currentPhone) || 0);
-    await setData("demoWallet/" + currentPhone, bal + 50);
-
+    // ₹50 add karne wali lines hata di gayi hain
     used[currentPhone] = true;
     await setData("usedJoiningCodes", used);
 
-    showPopup("success", "Bonus Added!", "₹50 Bonus Added Successfully!");
+    showPopup("success", "Success!", "Referral Code Successfully Used!");
+
     document.getElementById("enterRefCode").value = "";
 };
 
