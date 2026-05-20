@@ -108,20 +108,30 @@ body {
 }
 .support-btn i { font-size: 22px; margin-bottom: 6px; display:block; }
 
+/* Original Popup */
+.custom-popup {
+    position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-30px);
+    background:#fff; width:90%; max-width:340px; border-radius:18px;
+    padding:16px 18px; display:flex; align-items:center; gap:12px;
+    box-shadow:0 15px 40px rgba(0,0,0,.15); z-index:99999;
+    opacity:0; visibility:hidden; transition:.35s;
+}
+.custom-popup.show {
+    opacity:1; visibility:visible; transform:translateX(-50%) translateY(0);
+}
+.popup-icon {
+    width:45px; height:45px; border-radius:50%; background:#16a34a; color:#fff;
+    display:flex; justify-content:center; align-items:center; font-size:22px; font-weight:bold;
+}
+.popup-text { flex:1; }
+.popup-title { font-size:15px; font-weight:700; color:#222; margin-bottom:3px; }
+.popup-message { font-size:13px; color:#666; line-height:1.4; }
+.popup-close { cursor:pointer; font-size:18px; color:#aaa; font-weight:bold; }
+
 /* Live Chat */
-.chat-modal {
-    position: fixed; top:0; left:0; width:100%; height:100%;
-    background:rgba(0,0,0,0.75); display:none; align-items:flex-end; z-index:99999;
-}
-.chat-box {
-    width:100%; max-width:420px; background:white; border-radius:20px 20px 0 0;
-    height:82vh; display:flex; flex-direction:column;
-}
-.chat-header {
-    background:#e61e2a; color:white; padding:14px 16px;
-    display:flex; align-items:center; justify-content:space-between;
-    border-radius:20px 20px 0 0;
-}
+.chat-modal { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); display:none; align-items:flex-end; z-index:99999; }
+.chat-box { width:100%; max-width:420px; background:white; border-radius:20px 20px 0 0; height:82vh; display:flex; flex-direction:column; }
+.chat-header { background:#e61e2a; color:white; padding:14px 16px; display:flex; align-items:center; justify-content:space-between; border-radius:20px 20px 0 0; }
 .chat-messages { flex:1; padding:15px; overflow-y:auto; background:#f8fafc; }
 .message { margin-bottom:12px; max-width:80%; padding:10px 14px; border-radius:18px; font-size:15px; }
 .message.admin { margin-right:auto; background:#e5e7eb; border-radius:18px 18px 18px 4px; }
@@ -146,13 +156,25 @@ body {
 </head>
 <body>
 
+<!-- Original Popup -->
+<div class="custom-popup" id="popup">
+    <div class="popup-icon" id="popupIcon">✓</div>
+    <div class="popup-text">
+        <div class="popup-title" id="popupTitle">Success</div>
+        <div class="popup-message" id="popupMessage">Action completed</div>
+    </div>
+    <div class="popup-close" onclick="closePopup()">×</div>
+</div>
+
 <div class="header">AMUL Team & Referral</div>
 
 <div class="container">
     <div class="card">
         <h2 style="text-align:center;margin-bottom:10px;">Your Referral Code</h2>
         <div class="ref-code" id="myRefCode">------</div>
-        <button class="copy-btn" onclick="copyReferralLink()"><i class="fas fa-copy"></i> Copy Referral Link</button>
+        <button class="copy-btn" onclick="copyReferralLink()">
+            <i class="fas fa-copy"></i> Copy Referral Link
+        </button>
     </div>
 
     <div class="card">
@@ -207,6 +229,32 @@ body {
 const PROXY_URL = "https://fjseur.sawanenter7209.workers.dev";
 let currentPhone = localStorage.getItem("phone") || "";
 
+// ==================== POPUP ====================
+let popupTimer;
+function showPopup(type, title, message) {
+    clearTimeout(popupTimer);
+    const popup = document.getElementById("popup");
+    const icon = document.getElementById("popupIcon");
+
+    document.getElementById("popupTitle").innerText = title;
+    document.getElementById("popupMessage").innerText = message;
+
+    if (type === "success") {
+        icon.innerHTML = "✓"; 
+        icon.style.background = "#16a34a";
+    } else {
+        icon.innerHTML = "!"; 
+        icon.style.background = "#dc2626";
+    }
+
+    popup.classList.add("show");
+    popupTimer = setTimeout(() => popup.classList.remove("show"), 2800);
+}
+
+function closePopup() {
+    document.getElementById("popup").classList.remove("show");
+}
+
 // ==================== PROXY ====================
 async function getData(path) {
     try {
@@ -225,7 +273,7 @@ async function setData(path, value) {
     } catch(e) {}
 }
 
-// ==================== TEAM & REFERRAL (Full) ====================
+// ==================== TEAM & REFERRAL ====================
 async function loadTeamData() {
     if (!currentPhone) return;
 
@@ -264,16 +312,22 @@ async function loadTeamData() {
     document.getElementById("teamList").innerHTML = html || "<p style='text-align:center;color:#888;padding:30px 0;'>No team members yet</p>";
 }
 
+// ==================== COPY REFERRAL LINK (Exact Link) ====================
 window.copyReferralLink = () => {
-    const code = document.getElementById("myRefCode").innerText;
-    const link = `${window.location.origin}/login.html?ref=${code}`;
-    navigator.clipboard.writeText(link);
-    alert("✅ Referral Link Copied!");
+    const code = document.getElementById("myRefCode").innerText.trim();
+    const link = `https://sawanpoint0000-dev.github.io/dashbord/login.html?ref=${code}`;
+    
+    navigator.clipboard.writeText(link).then(() => {
+        showPopup("success", "Link Copied Successfully!", link);
+    }).catch(() => {
+        showPopup("error", "Failed", "Please try again");
+    });
 };
 
+// ==================== USE REFERRAL CODE ====================
 window.useReferralCode = async () => {
     const code = document.getElementById("enterRefCode").value.trim();
-    if (code.length !== 6) return alert("Enter valid 6 digit code");
+    if (code.length !== 6) return showPopup("error", "Invalid Code", "Enter valid 6 digit code");
 
     const users = await getData("users") || {};
     let referrerPhone = null;
@@ -284,11 +338,11 @@ window.useReferralCode = async () => {
         }
     }
 
-    if (!referrerPhone) return alert("❌ Invalid Referral Code!");
-    if (referrerPhone === currentPhone) return alert("❌ You cannot use your own referral code!");
+    if (!referrerPhone) return showPopup("error", "Invalid Code", "This referral code is not valid");
+    if (referrerPhone === currentPhone) return showPopup("error", "Not Allowed", "You cannot use your own referral code!");
 
     const used = await getData("usedJoiningCodes") || {};
-    if (used[currentPhone]) return alert("❌ You have already used a referral code!");
+    if (used[currentPhone]) return showPopup("error", "Already Used", "You have already used a referral code!");
 
     let bal = Number(await getData("demoWallet/" + currentPhone) || 0);
     await setData("demoWallet/" + currentPhone, bal + 50);
@@ -296,7 +350,7 @@ window.useReferralCode = async () => {
     used[currentPhone] = true;
     await setData("usedJoiningCodes", used);
 
-    alert("🎉 ₹50 Bonus Added Successfully!");
+    showPopup("success", "Bonus Added!", "₹50 Bonus Added Successfully!");
     document.getElementById("enterRefCode").value = "";
 };
 
@@ -315,32 +369,28 @@ async function loadSupportLinks() {
     document.getElementById("supportGrid").innerHTML = html;
 }
 
-// ==================== LIVE CHAT - FIXED (Admin Reply Visible) ====================
-window.openLiveChat = async () => {
+// ==================== LIVE CHAT ====================
+window.openLiveChat = () => {
     document.getElementById("chatModal").style.display = "flex";
-    await loadChatHistory();
+    loadChatHistory();
 };
 
-window.closeLiveChat = () => {
-    document.getElementById("chatModal").style.display = "none";
-};
+window.closeLiveChat = () => document.getElementById("chatModal").style.display = "none";
 
 async function loadChatHistory() {
     if (!currentPhone) return;
     const chats = await getData("liveChats") || {};
     const userChats = chats[currentPhone] || [];
-
     let html = "";
+
     userChats.forEach(m => {
-        html += `
-        <div class="message ${m.from === 'user' ? 'user' : 'admin'}">
-            ${m.message}<br>
-            <small>${new Date(m.time).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</small>
-        </div>`;
+        const cls = m.from === "user" ? "user" : "admin";
+        html += `<div class="message ${cls}">${m.message}<br><small>${new Date(m.time).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</small></div>`;
     });
 
-    document.getElementById("chatMessages").innerHTML = html;
-    document.getElementById("chatMessages").scrollTop = 999999;
+    const msgDiv = document.getElementById("chatMessages");
+    msgDiv.innerHTML = html || `<div style="text-align:center;color:#888;padding:50px 0;">No messages yet. Say Hello!</div>`;
+    msgDiv.scrollTop = msgDiv.scrollHeight;
 }
 
 window.sendChatMessage = async () => {
@@ -358,16 +408,16 @@ window.sendChatMessage = async () => {
     });
 
     await setData("liveChats", chats);
-    await loadChatHistory();   // Refresh after sending
     input.value = "";
+    loadChatHistory();
 };
 
-// Auto Refresh Chat (Important)
+// Auto Refresh Chat
 setInterval(() => {
     if (document.getElementById("chatModal").style.display === "flex") {
         loadChatHistory();
     }
-}, 2500);   // Har 2.5 second mein check
+}, 2500);
 
 // ==================== INIT ====================
 if (!currentPhone) {
